@@ -13,8 +13,23 @@ services:
   node-red:
     image: nodered/node-red:latest
     environment:
-      - TZ=Europe/Amsterdam
+      - TZ=${TZ}
     ports:
       - "1880:1880"
     volumes:
-      - ./node-red/data:/data
+      - ./home-assistant/node-red/data:/data
+  
+  esphome:
+    container_name: esphome
+    image: esphome/esphome
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./home-assistant/esphome/config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    ports:
+      - "6052:6052"
+      - "6123:6123"
